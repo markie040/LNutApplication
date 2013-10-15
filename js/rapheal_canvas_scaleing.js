@@ -1,4 +1,5 @@
 (function(){
+
   window.ScaleRaphael = function(container, width, height){
     var wrapper = document.getElementById(container);
     if (!wrapper.style.position) wrapper.style.position = "relative";

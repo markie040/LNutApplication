@@ -6,7 +6,7 @@
 		paper = new ScaleRaphael("APPLICATION",1280,800);   
       	
       	paper.changeSize($(window).width(), $(window).height(), true, true);
-      	
+      	var uid = device.uuid ;
       	var app_instance = new Application()
       	$(window).resize
       	(

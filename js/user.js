@@ -1,8 +1,9 @@
 	var activeuser = null; // global varible for current user
 	
-	function User()
+	function User(token)
 	{
-		this.id;
+		this.id = 'User';
+		this.token = token; 
 		this.avatar_id;
 		this.username;
 		this.valid;
@@ -17,31 +18,66 @@
 		
 		init:function()
 		{
+
 			if(activeuser != null)
-				this = activeuser; 
+				this.parseJson(activeuser); 
 			else
 				this.getUser(); 
 		},
 		
-		createIdentification(a , b , c)
+		createIdentification:function(a , b , c)
 		{
 			this.id = a+"_"+b+"_"+c;
 		}, 
 		
 		getUser:function()
 		{
-			var url = "/webservice/applicationUse/"+this.id+"/";
-			var connection = new Connection();
-			this.parseJson(connection.getData(url));
+			var DB = new Database();
+			var result = DB.Select(this.id)
+			
+			if(result === false && this.token == null)
+			{
+				new Login();
+			}
+			else if(result === false)
+			{
+				this.getUserInformation();
+			}
+			else
+			{
+				this.parseJson(DB.Select(this.id));
+			}
+	
 		}, 
+		
+		getUserInformation:function()
+		{
+			me = this; 
+			
+			var url = "/applicationapi/user/get/details";
+			
+			var tosend = {'token': this.token }; 
+			
+			var connection = new Connection();
+			
+			var response = connection.sumbitData(url , tosend , function(data){me.parseJson(data)});
+	
+		},
+		
 		
 		parseJson:function(json)
 		{
 			thiz = this;
 			
-			$.each(data, function(key, value){
+			$.each(json, function(key, value){
     			thiz[key] = value;
 			});
+			
+			activeuser = this;
+			
+			DB = new Database();
+			DB.insert(this);
+			new Application();
 			
 		},
 		
@@ -58,7 +94,7 @@
 		validateUser:function() // for internal application
 		{
 			
-		}
+		},
 		
 		isValidUser:function(v , d)
 		{
@@ -70,7 +106,7 @@
 			{
 				this.vaild = "AllowedAccess";
 			}
-			elseif(now < d &&  v == "trial")
+			else if(now < d &&  v == "trial")
 			{
 				this.vaild = "TrialAccess";
 			}

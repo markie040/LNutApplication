@@ -1,3 +1,5 @@
+	var host = "http://conversion.testingnut.com/en"
+	
 	function Application()
 	{
 		this.run();
@@ -10,10 +12,7 @@
 		
 		run:function() // Application must find the package and draw background images and default objects , 
 		{
-			var user = new User();
-			
-			if(user.vaild == true)
-				this.whereAmI();
+			this.whereAmI();
 		},
 		
 		PreLoadApplication:function() // Preload Application Script , Reteve all data on enable a offline application
@@ -28,7 +27,9 @@
 		
 		whereAmI:function() // used for the website version of the app , by adding the correct data in the URL on a hash tag the application will find the correct page and launch said page  
 		{
-			
+			new Package();
+			var l =  new LanguageSelection();
+			l.init();
 		}, 
 		
 		lanuchController:function(location , data) // call a controller for the desired page. this will build the page 
